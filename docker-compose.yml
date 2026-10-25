@@ -1,0 +1,36 @@
+# Example deployment of librechat-router in front of LibreChat.
+#
+# The router sits between the public chat port and the LibreChat API. Point your
+# reverse proxy (nginx/traefik) at the router's port (3081) instead of the
+# LibreChat API directly. The router must be on the same docker network as the
+# LibreChat API so it can reach UPSTREAM_HOST.
+#
+# Copy .env.example to .env and adjust the agent ids / JEV endpoint for your
+# deployment before running.
+version: "3.8"
+
+services:
+  librechat-router:
+    build: .
+    image: librechat-router:latest
+    container_name: librechat-router
+    ports:
+      - "3081:3081"
+    environment:
+      PORT: "3081"
+      UPSTREAM_HOST: "librechat-api"
+      UPSTREAM_PORT: "3080"
+      JEV_BASE: "http://192.168.50.106:8081"
+      JEV_PATH: "/upstream/jev-9b/v1/decide"
+      RECEPTIONIST_ID: "agent_3fs4vNxAoN9duaGKlwObE"
+      ROUTER_AGENT_ID: "agent_hgrCkcWQEk8znW4L5zoMe"
+      ROUTER_THRESHOLD: "0.5"
+      JEV_TIMEOUT_MS: "10000"
+    # Join the same network as the LibreChat API (adjust the network name).
+    networks:
+      - librechat
+    restart: unless-stopped
+
+networks:
+  librechat:
+    external: true

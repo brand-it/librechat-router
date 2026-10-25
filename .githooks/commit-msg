@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Enforces Conventional Commits on the first line of the commit message:
+#   type: subject
+#   type(scope): subject
+#   type: subject!   (breaking change)
+# where type is one of: feat, fix, docs, style, refactor, perf, test, build,
+# ci, chore, revert. The rest of the message (body, trailers) is unrestricted.
+set -euo pipefail
+
+msg_file="$1"
+first_line="$(head -n 1 "$msg_file")"
+
+# Allow merge, revert, and fixup commits (git-generated).
+case "$first_line" in
+  Merge*|Revert*|fixup!*|squash!*) exit 0 ;;
+esac
+
+if ! printf '%s\n' "$first_line" \
+  | grep -Eq '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([A-Za-z0-9._-]+\))?!?: .{3,}$'; then
+  echo "commit-msg: first line must follow Conventional Commits" >&2
+  echo "  examples: feat: add per-message model swap" >&2
+  echo "            fix(router): handle missing conversationId" >&2
+  echo "            docs: document JEV-9B decision endpoint" >&2
+  exit 1
+fi

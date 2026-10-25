@@ -1,0 +1,15 @@
+.git
+.gitignore
+.github
+test/
+docs/
+node_modules/
+.env
+.env.example
+*.log
+README.md
+LICENSE
+CONTRIBUTING.md
+docker-compose.yml
+package.json
+.tool-versions

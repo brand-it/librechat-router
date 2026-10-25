@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Runs the syntax check and test suite before a commit. Fails the commit if
+# either fails.
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+echo "pre-commit: running lint (node --check)"
+node --check server.js
+node --check test/router.test.js
+
+echo "pre-commit: running tests (node --test)"
+node --test
+
+echo "pre-commit: OK"

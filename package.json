@@ -1,0 +1,17 @@
+{
+  "name": "librechat-router",
+  "version": "1.0.0",
+  "description": "JEV-9B-driven model router in front of LibreChat: swaps a conversation between the image-generation agent and the standard Spark model, per message.",
+  "type": "commonjs",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "docker": "docker build -t librechat-router ."
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}
